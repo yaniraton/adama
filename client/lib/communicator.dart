@@ -43,7 +43,7 @@ class Communicator {
       } catch (e) {
         print("An error occurred: $e");
       }
-    });
+    }); 
   }
 
   void send(String message) {
