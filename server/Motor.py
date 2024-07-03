@@ -1,14 +1,16 @@
 from gpiozero import OutputDevice, PWMOutputDevice
+from server.MotorPorts import MotorPorts
+
 
 class Motor:
 
-    def __init__(self, in1_port, in2_port, ena_port):
-        self.in1 = OutputDevice(in1_port)
-        self.in2 = OutputDevice(in2_port)
-        self.en = PWMOutputDevice(ena_port) 
+    def __init__(self, ports: MotorPorts) -> None:
+        self.in1 = OutputDevice(ports.in1)
+        self.in2 = OutputDevice(ports.in2)
+        self.en = PWMOutputDevice(ports.en) 
 
 
-    def set(self, speed: float):
+    def set(self, speed: float) -> None:
         """
         This function sets a given speed to this motor.
 
