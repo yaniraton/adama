@@ -5,6 +5,7 @@ classDiagram
     Server *-- Communicator
     Server *-- DriveTrain
     DriveTrain *-- Motor
+    Motor *-- MotorPorts
     class Server{
         - m_communicator: Communicator
         - m_driveTrain: DriveTrain
@@ -29,6 +30,12 @@ classDiagram
         -in2: OutputDevice
         -en: PWMOutputDevice
         +set(float) : void
+    }
+    class MotorPorts{
+        -in1: int
+        -in2: int
+        -en: int
+        +get() : tuple
     }
 ```
 
