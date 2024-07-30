@@ -47,6 +47,10 @@ classDiagram
         -set_right_values(): void
         -set_left_values(): void
     }
+    class Servo{
+        -servo: Servo
+        +set_servo_angle(): void
+    }
 ```
 
 
