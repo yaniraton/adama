@@ -2,11 +2,12 @@ from pydualsense import pydualsense
 import Constants
 
 class Controller:
-    def __init__(self):
+    def __init__(self,servoFunc):
         self.ds = pydualsense()
         self.leftY = 0.0
         self.leftX = 0.0
         self.rightX = 0.0
+        self.servoFunc = servoFunc
     
     
     def set_left_values(self, leftX : float, leftY: float):
@@ -30,6 +31,11 @@ class Controller:
             rightY (float): The y axis value of the right joystick, between -128 and 128.
         """        
         self.rightX = rightX / Constants.HALF_BYTE
+
+    def cross_pressed_(self):
+        self.servoFunc(180)
+    def circle_pressed_(self):
+        self.servoFunc(0)
     
     
     def connect(self) -> bool:
@@ -49,6 +55,8 @@ class Controller:
             return False
         self.ds.left_joystick_changed += self.set_left_values
         self.ds.right_joystick_changed += self.set_right_values
+        self.ds.cross_pressed += self.cross_pressed_
+        self.ds.circle_pressed += self.circle_pressed_
         return True
 
     
