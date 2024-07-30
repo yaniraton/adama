@@ -4,9 +4,13 @@
 classDiagram
     Server *-- Communicator
     Server *-- DriveTrain
+    Server *-- Controller
+    DriveTrain *-- Motor
+    Motor *-- MotorPorts
     class Server{
-        - m_communicator: Communicator
-        - m_driveTrain: DriveTrain
+        - communicator: Communicator
+        - driveTrain: DriveTrain
+        - controller: Controller
         +run() : void
     }
     class Communicator{
@@ -22,6 +26,30 @@ classDiagram
         -m_leftFront: Motor
         -m_leftRear: Motor
         +moveInDirection(float,float) : void
+    }
+    class Motor{
+        -in1: OutputDevice
+        -in2: OutputDevice
+        -en: PWMOutputDevice
+        +set(float) : void
+    }
+    class MotorPorts{
+        -in1: int
+        -in2: int
+        -en: int
+        +get() : tuple
+    }
+    class Controller{
+        -ds: pydualsense
+        -leftY: float
+        -leftX: float
+        -rightX: float
+        -set_right_values(): void
+        -set_left_values(): void
+    }
+    class Servo{
+        -servo: Servo
+        +set_servo_angle(): void
     }
 ```
 
