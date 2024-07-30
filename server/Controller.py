@@ -31,11 +31,6 @@ class Controller:
             rightY (float): The y axis value of the right joystick, between -128 and 128.
         """        
         self.rightX = rightX / Constants.HALF_BYTE
-
-    def cross_pressed_(self):
-        self.servoFunc(180)
-    def circle_pressed_(self):
-        self.servoFunc(0)
     
     
     def connect(self) -> bool:
@@ -55,8 +50,6 @@ class Controller:
             return False
         self.ds.left_joystick_changed += self.set_left_values
         self.ds.right_joystick_changed += self.set_right_values
-        self.ds.cross_pressed += self.cross_pressed_
-        self.ds.circle_pressed += self.circle_presse
         return True
 
     
@@ -69,3 +62,27 @@ class Controller:
             All of them are values between -1 and 1.
         """         
         return (self.leftY, self.leftX, self.rightX)
+    
+    def add_to_cross_pressed(self, func, angle):
+        self.ds.cross_pressed += lambda: func(angle)
+
+    def add_to_circle_pressed(self, func, angle):
+        self.ds.circle_pressed += lambda: func(angle)
+    
+    def add_to_triangle_pressed(self, func):
+        self.ds.triangle_pressed += func
+
+    def add_to_square_pressed(self, func):
+        self.ds.square_pressed += func
+    
+    def add_to_dpad_up(self, func):
+        self.ds.dpad_up += func
+
+    def add_to_dpad_down(self, func):
+        self.ds.dpad_down += func
+
+    def add_to_dpad_left(self, func):
+        self.ds.dpad_left += func
+    
+    def add_to_dpad_right(self, func):
+        self.ds.dpad_right += func

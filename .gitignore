@@ -287,4 +287,6 @@ pyrightconfig.json
 .DS_Store
 .vscode/
 
+
+myenv/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,pycharm+all,python,pydev
