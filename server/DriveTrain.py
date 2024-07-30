@@ -2,11 +2,12 @@ from server.Motor import Motor
 import Constants
 
 class DriveTrain:
-    def __init__(self, ports : list) -> None:
+    def __init__(self, ports : tuple) -> None:
         self.rightFront = Motor(ports[0])
         self.rightRear = Motor(ports[1])
         self.leftFront = Motor(ports[2])
         self.leftRear = Motor(ports[3])
+        
 
     def drive(self, leftY: float, leftX: float, rightX: float) -> None:
         """
