@@ -8,3 +8,4 @@ RIGHT_FRONT_PORTS = MotorPorts(0, 0, 0)
 RIGHT_REAR_PORTS = MotorPorts(0, 0, 0)
 LEFT_FRONT_PORTS = MotorPorts(0, 0, 0)
 LEFT_REAR_PORTS = MotorPorts(0, 0, 0)
+SERVO_PORT = 0

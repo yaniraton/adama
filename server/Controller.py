@@ -56,7 +56,7 @@ class Controller:
         self.ds.left_joystick_changed += self.set_left_values
         self.ds.right_joystick_changed += self.set_right_values
         self.ds.cross_pressed += self.cross_pressed_
-        self.ds.circle_pressed += self.circle_pressed_
+        self.ds.circle_pressed += self.circle_presse
         return True
 
     
