@@ -1,4 +1,4 @@
-from server.Motor import Motor
+from server.Utilities.Motor import Motor
 import Constants
 
 class DriveTrain:

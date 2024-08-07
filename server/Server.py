@@ -1,12 +1,12 @@
-import DriveTrain
-import ServoMotor
+import server.Subsystems.DriveTrain as DriveTrain
+import server.Utilities.ServoMotor as ServoMotor
 import Controller
 import Constants
 import threading
-import HumiditySensor
-import AccelSensor
+import server.Utilities.HumiditySensor as HumiditySensor
+import server.Utilities.AccelSensor as AccelSensor
 from typing import List
-from UltrasonicSensor import UltrasonicSensor
+from server.Utilities.UltrasonicSensor import UltrasonicSensor
 
 class Server:
 

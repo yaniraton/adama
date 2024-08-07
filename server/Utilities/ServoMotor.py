@@ -1,6 +1,4 @@
 from gpiozero import Servo
-import time
-
 
 class ServoMotor:
     def __init__(self, pin: int) -> None:

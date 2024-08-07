@@ -1,5 +1,5 @@
 from gpiozero import OutputDevice, PWMOutputDevice
-from server.MotorPorts import MotorPorts
+from server.Utilities.MotorPorts import MotorPorts
 
 
 class Motor:
