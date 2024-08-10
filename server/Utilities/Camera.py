@@ -56,13 +56,13 @@ class Camera:
             decoded_text = qreader.detect_and_decode(image=image)
 
             if len(decoded_text) > 0:
-                return decoded_text[0]
+                return str(decoded_text[0])
             else:
-                return None
+                return ""
 
         else:
             print("Can't receive frame")
-            return None
+            return ""
 
 
     def get_instance():

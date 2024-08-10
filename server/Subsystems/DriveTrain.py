@@ -1,5 +1,8 @@
+from server.Utilities.UltrasonicSensor import UltrasonicSensor
+from server.Utilities.Camera import Camera
 from server.Utilities.Motor import Motor
 import Constants
+import time
 
 class DriveTrain:
     def __init__(self, ports : tuple) -> None:
@@ -7,6 +10,8 @@ class DriveTrain:
         self.rightRear = Motor(ports[1])
         self.leftFront = Motor(ports[2])
         self.leftRear = Motor(ports[3])
+        self.camera = Camera.get_instance()
+        self.right_sonic = UltrasonicSensor(0, 0, 0)
         
 
     def drive(self, leftY: float, leftX: float, rightX: float) -> None:
@@ -48,3 +53,34 @@ class DriveTrain:
         leftRearPower = (leftY - leftX + rightX) / denominator
 
         return (rightFrontPower, rightBackPower, leftFrontPower, leftRearPower)
+
+
+    def drive_until_plant_recognized(self, distance, max_time):
+        sonic_distance = self.right_sonic.get_distance(0)
+        plant_found = True
+
+        # Drives to distance if needed
+        if sonic_distance > distance:
+            plant_found = self.drive_until_distance(distance, max_time)
+
+        if plant_found:
+            scanned_data = self.camera.scan_qr()
+            return (scanned_data != "", scanned_data)
+        else:
+            return (False, "")
+
+
+    def drive_until_distance(self, distance, max_time):
+        self.drive(Constants.DRIVE_FORWARD_SPEED, 0, 0)
+
+        start_time = time.time()
+        current_time = time.time()
+        sonic_distance = self.right_sonic.get_distance(0)
+            
+        while (sonic_distance > distance) and (current_time - start_time < max_time):
+            sonic_distance = self.right_sonic.get_distance(0)
+            current_time = time.time()
+
+        self.drive(0, 0, 0)  # Stops driving
+
+        return sonic_distance > distance  # Whether got to the distance or stopped by time
