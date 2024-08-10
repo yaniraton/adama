@@ -4,13 +4,12 @@ from server.Utilities.Motor import Motor
 import Constants
 import time
 
-
 class Elevator:
 
     def __init__(self) -> None:
         self.right_motor = Motor(Constants.ELEVATOR_RIGHT_PORTS)
         self.left_motor = Motor(Constants.ELEVATOR_LEFT_PORTS)
-        self.camera = Camera(Constants.CAMERA_PORT, Constants.CAMERA_FPS, Constants.CAMERA_RESOLUTION)
+        self.camera = Camera.get_instance()
 
 
     def move_elevator(self, speed: float, moving_time: float):

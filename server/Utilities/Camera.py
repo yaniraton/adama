@@ -1,8 +1,11 @@
 import cv2 as cv
 import time
 from qreader import QReader
+from server import Constants
 
 class Camera:
+    instance = None
+
     def __init__(self, camera_port: int, fps: float, resolution: tuple) -> None:
         self.camera_port = camera_port
         self.fps = fps
@@ -60,3 +63,10 @@ class Camera:
         else:
             print("Can't receive frame")
             return None
+
+
+    def get_instance():
+        if Camera.instance is None:
+            Camera.instance = Camera(Constants.CAMERA_PORT, Constants.CAMERA_FPS, Constants.CAMERA_RESOLUTION)
+        
+        return Camera.instance
