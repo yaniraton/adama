@@ -45,3 +45,10 @@ class Elevator:
         self.open_elevator(video_file_name)
         time.sleep(2)
         self.close_elevator(video_file_name)
+
+        self.lock_elevator()
+
+    
+    def lock_elevator(self):
+        self.right_motor.lock()
+        self.left_motor.lock()

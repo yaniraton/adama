@@ -11,7 +11,7 @@ class DriveTrain:
         self.leftFront = Motor(Constants.LEFT_FRONT_PORTS)
         self.leftRear = Motor(Constants.LEFT_REAR_PORTS)
         self.camera = Camera.get_instance()
-        self.right_sonic = UltrasonicSensor(0, 0, 0)
+        self.right_sonic = UltrasonicSensor(Constants.COMMON_SONIC_TRIG, Constants.RIGHT_SONIC_ECHO)
         
 
     def drive(self, leftY: float, leftX: float, rightX: float) -> None:
@@ -76,12 +76,23 @@ class DriveTrain:
 
         start_time = time.time()
         current_time = time.time()
-        sonic_distance = self.right_sonic.get_distance(0)
+        sonic_distance = self.right_sonic.measure_distance()
             
         while (sonic_distance > distance) and (current_time - start_time < max_time):
-            sonic_distance = self.right_sonic.get_distance(0)
+            sonic_distance = self.right_sonic.measure_distance()
             current_time = time.time()
 
         self.drive(0, 0, 0)  # Stops driving
+        self.lock_drive_train()
 
         return sonic_distance > distance  # Whether got to the distance or stopped by time
+    
+
+    def lock_drive_train(self):
+        """
+        This function locks the drivetrain motors.
+        """        
+        self.rightFront.lock()
+        self.rightRear.lock()
+        self.leftFront.lock()
+        self.leftRear.lock()

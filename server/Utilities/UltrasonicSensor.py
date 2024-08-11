@@ -1,26 +1,33 @@
-import RPi.GPIO as GPIO
 from gpiozero import DistanceSensor
-import time
 
 class UltrasonicSensor:
-    def __init__(self, trig_pin, echo_pin, mux_pins):
+    def __init__(self, trig_pin, echo_pin):
+        """Initializes the UltrasonicSensor object
+
+        Args:
+            trig_pin (int): The pin number of the TRIG pin of the ultrasonic sensor
+            echo_pin (int): The pin number of the ECHO pin of the ultrasonic sensor
+        """        
         self.trig_pin = trig_pin
         self.echo_pin = echo_pin
-        self.mux_pins = mux_pins
-        self.sensor = DistanceSensor(echo=echo_pin, trigger=trig_pin)
 
-    def get_distance(self, channel):
-        # Set mux pins based on channel
-        GPIO.output(self.mux_pins[0], (channel & 1) == 1)
-        GPIO.output(self.mux_pins[1], (channel & 2) == 2)
-        GPIO.output(self.mux_pins[2], (channel & 4) == 4)
+    def choose_echo_pin(self, echo_pin):
+        """Chooses the ECHO pin of the ultrasonic sensor
 
-        # Allow some time for mux to settle
-        time.sleep(0.001)
+        Args:
+            echo_pin (int): The pin number of the ECHO pin of the ultrasonic sensor
+        """        
+        self.echo_pin = echo_pin
 
-        # Trigger sensor and get distance
-        self.sensor.trigger()
-        distance = self.sensor.distance
-        time.sleep(0.1)  # Avoid overwhelming the sensor
+    def measure_distance(self,eecho_pin=-1):
+        """Measures the distance between the ultrasonic sensor and the object in front of it
 
+        Returns:
+            float: The distance between the ultrasonic sensor and the object in front of it
+        """ 
+        if eecho_pin == -1:
+            eecho_pin = self.echo_pin
+        sensor = DistanceSensor(echo=eecho_pin, trigger=self.trig_pin)
+        distance = sensor.distance
+        del sensor  # Delete the sensor object to release the TRIG pin
         return distance
