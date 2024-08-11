@@ -1,3 +1,4 @@
+from server.Utilities.AccelSensor import AccelSensor
 from server.Utilities.UltrasonicSensor import UltrasonicSensor
 from server.Utilities.Camera import Camera
 from server.Utilities.Motor import Motor
@@ -12,6 +13,7 @@ class DriveTrain:
         self.leftRear = Motor(Constants.LEFT_REAR_PORTS)
         self.camera = Camera.get_instance()
         self.right_sonic = UltrasonicSensor(Constants.COMMON_SONIC_TRIG, Constants.RIGHT_SONIC_ECHO)
+        self.imu = AccelSensor.get_instance()
         
 
     def drive(self, leftY: float, leftX: float, rightX: float) -> None:
@@ -96,3 +98,40 @@ class DriveTrain:
         self.rightRear.lock()
         self.leftFront.lock()
         self.leftRear.lock()
+
+
+    def rotate_to_angle(self, target_angle: float, tolerance: float = 1.0, max_time: float = 5.0) -> None:
+        """
+        Rotates the robot to the specified angle using the IMU sensor.
+
+        Args:
+            target_angle (float): The desired angle to rotate to, in degrees.
+            tolerance (float): The acceptable range of error for the target angle.
+            max_time (float): The maximum time allowed to complete the rotation, in seconds.
+        """
+        start_time = time.time()
+        current_time = start_time
+        
+        while current_time - start_time < max_time:
+            # Read current gyroscope data (assuming Z-axis is the yaw angle)
+            gyro_x, gyro_y, current_angle = self.imu.read_gyroscope()
+            
+            # Calculate the error
+            error = target_angle - current_angle
+            
+            # Check if within tolerance
+            if abs(error) <= tolerance:
+                break
+            
+            # Determine the direction and speed to rotate
+            rotation_speed = Constants.ROTATION_SPEED * (error / abs(error))  # Rotate left or right based on the sign of the error
+            
+            # Apply the rotation to the motors
+            self.drive(0, 0, rotation_speed)
+            
+            # Update the current time
+            current_time = time.time()
+        
+        # Stop the robot after reaching the target angle
+        self.drive(0, 0, 0)
+        self.lock_drive_train()

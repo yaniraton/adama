@@ -27,7 +27,7 @@ class Server:
         for trig, echo in Constants.SONIC:
             self.ultraSonicSensors.append(UltrasonicSensor(trig, echo))
         self.humiditySensor = HumiditySensor.get_instance()
-        self.accelSensor = AccelSensor
+        self.accelSensor = AccelSensor.get_instance()
         self.configure_buttons()
 
         # TODO: add the comunicator object when it is ready
