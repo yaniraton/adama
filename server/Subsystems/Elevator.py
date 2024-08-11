@@ -39,3 +39,9 @@ class Elevator:
     def stop_elevator(self):
         self.right_motor.set(0)
         self.left_motor.set(0)
+
+
+    def capture_plant(self, video_file_name):
+        self.open_elevator(video_file_name)
+        time.sleep(2)
+        self.close_elevator(video_file_name)

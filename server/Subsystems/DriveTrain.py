@@ -5,11 +5,11 @@ import Constants
 import time
 
 class DriveTrain:
-    def __init__(self, ports : tuple) -> None:
-        self.rightFront = Motor(ports[0])
-        self.rightRear = Motor(ports[1])
-        self.leftFront = Motor(ports[2])
-        self.leftRear = Motor(ports[3])
+    def __init__(self) -> None:
+        self.rightFront = Motor(Constants.RIGHT_FRONT_PORTS)
+        self.rightRear = Motor(Constants.RIGHT_REAR_PORTS)
+        self.leftFront = Motor(Constants.LEFT_FRONT_PORTS)
+        self.leftRear = Motor(Constants.LEFT_REAR_PORTS)
         self.camera = Camera.get_instance()
         self.right_sonic = UltrasonicSensor(0, 0, 0)
         
@@ -55,13 +55,14 @@ class DriveTrain:
         return (rightFrontPower, rightBackPower, leftFrontPower, leftRearPower)
 
 
-    def drive_until_plant_recognized(self, distance, max_time):
+    def drive_until_plant_recognized(self):
         sonic_distance = self.right_sonic.get_distance(0)
         plant_found = True
 
         # Drives to distance if needed
-        if sonic_distance > distance:
-            plant_found = self.drive_until_distance(distance, max_time)
+        if sonic_distance > Constants.DISTANCE_FROM_PLANT:
+            plant_found = self.drive_until_distance(Constants.DISTANCE_FROM_PLANT,
+                                                     Constants.MAX_SEARCHING_PLANT_TIME)
 
         if plant_found:
             scanned_data = self.camera.scan_qr()

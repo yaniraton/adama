@@ -5,9 +5,9 @@ import time
 
 class Arm:
 
-    def __init__(self, servo_pin: int, humidity_sensor_pin: int) -> None:
-        self.servo = ServoMotor(servo_pin)
-        self.humidity_sensor = HumiditySensor(humidity_sensor_pin)
+    def __init__(self) -> None:
+        self.servo = ServoMotor(Constants.SERVO_PORT)
+        self.humidity_sensor = HumiditySensor.get_instance()
 
 
     def open_arm(self) -> None:

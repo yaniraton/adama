@@ -1,7 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 
+from server import Constants
+
 class HumiditySensor:
+    instance = None
+
     def __init__(self, pin: int) -> None:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN)
@@ -55,3 +59,12 @@ class HumiditySensor:
             GPIO.cleanup()
 
         return duty_cycle
+
+
+
+    def get_instance():
+        if HumiditySensor.instance is None:
+            HumiditySensor.instance = HumiditySensor(Constants.HUMIDITY_SENSOR_PORT)
+        
+        return HumiditySensor.instance
+    
