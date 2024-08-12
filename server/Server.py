@@ -8,6 +8,7 @@ from server.Utilities.HumiditySensor import HumiditySensor
 from server.Utilities.AccelSensor import AccelSensor
 from typing import List
 from server.Utilities.UltrasonicSensor import UltrasonicSensor
+from WebUI import WebUI
 
 class Server:
 
@@ -18,6 +19,7 @@ class Server:
     ultraSonicSensors: List[UltrasonicSensor] = []
     humiditySensor: HumiditySensor
     accelSensor: AccelSensor
+    webUI : WebUI
 
     def __init__(self) -> None:
         self.driveTrain = DriveTrain()
@@ -29,6 +31,7 @@ class Server:
         self.humiditySensor = HumiditySensor.get_instance()
         self.accelSensor = AccelSensor.get_instance()
         self.configure_buttons()
+        self.webUI = WebUI()
 
         # TODO: add the comunicator object when it is ready
 
@@ -47,6 +50,21 @@ class Server:
         thread.start()
         thread.join()
 
+    def update_webUI(self):
+        data = {
+            "Soil Moisture": self.humiditySensor.get_soil_moisture(),
+            "Temperature": self.humiditySensor.get_temperature(),
+            "Humidity": self.humiditySensor.get_humidity(),
+            "Accel X": self.accelSensor.get_x(),
+            "Accel Y": self.accelSensor.get_y(),
+            "Accel Z": self.accelSensor.get_z(),
+            "Distance Front": self.ultraSonicSensors[0].get_distance(),
+            "Distance Right": self.ultraSonicSensors[1].get_distance(),
+            "Distance Left": self.ultraSonicSensors[2].get_distance(),
+            "Distance Back": self.ultraSonicSensors[3].get_distance()
+        }
+        self.webUI.update_data(data)
+
 
     def configure_buttons(self):
         self.controller.add_to_cross_pressed(self.arm.open_arm)
@@ -58,6 +76,7 @@ class Server:
         self.controller.add_to_dpad_right(self.ultraSonicSensors[1].get_distance)
         self.controller.add_to_dpad_left(self.ultraSonicSensors[2].get_distance)
         self.controller.add_to_dpad_down(self.ultraSonicSensors[3].get_distance)
+        #TODO: add a button to update the webUI
 
     
     def auto_run_robot(self):
