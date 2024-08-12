@@ -1,7 +1,11 @@
 import smbus2
 import time
 
+from server import Constants
+
 class AccelSensor:
+    instance = None
+
     def __init__(self, bus=1, address=0x69):
         self.bus = smbus2.SMBus(bus)
         self.address = address
@@ -45,3 +49,10 @@ class AccelSensor:
         print(f"Accelerometer: X={accel_x}, Y={accel_y}, Z={accel_z}")
         print(f"Gyroscope: X={gyro_x}, Y={gyro_y}, Z={gyro_z}")
         print(f"Magnetometer: X={mag_x}, Y={mag_y}, Z={mag_z}")
+
+    
+    def get_instance():
+        if AccelSensor.instance is None:
+            AccelSensor.instance = AccelSensor(Constants.IMU_BUS, Constants.IMU_ADDRESS)
+        
+        return AccelSensor.instance

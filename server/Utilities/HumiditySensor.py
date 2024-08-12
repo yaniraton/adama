@@ -1,23 +1,29 @@
 import RPi.GPIO as GPIO
 import time
 
+from server import Constants
+
 class HumiditySensor:
-    def __init__(self, channel: int) -> None:
+    instance = None
+
+    def __init__(self, pin: int) -> None:
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(channel, GPIO.IN)
+        GPIO.setup(pin, GPIO.IN)
+
+        self.pin = pin
 
 
-    def measure_pwm(self, pin):
+    def measure_pwm(self):
         # Measure the length of high and low pulses
         start_time = time.time()
     
-        while GPIO.input(pin) == GPIO.LOW:
+        while GPIO.input(self.pin) == GPIO.LOW:
             if time.time() - start_time > 1:
                 return None  # Timeout
         
         start = time.time()
 
-        while GPIO.input(pin) == GPIO.HIGH:
+        while GPIO.input(self.pin) == GPIO.HIGH:
             if time.time() - start > 1:
                 return None  # Timeout
         
@@ -25,7 +31,7 @@ class HumiditySensor:
         
         start = time.time()
 
-        while GPIO.input(pin) == GPIO.LOW:
+        while GPIO.input(self.pin) == GPIO.LOW:
             if time.time() - start > 1:
                 return None  # Timeout
         
@@ -34,13 +40,13 @@ class HumiditySensor:
         return high_time, low_time
 
 
-    def read_soil_moisture(self, channel: int):
+    def read_soil_moisture(self):
         try:
-            pulse_times = self.measure_pwm(channel)
+            pulse_times = self.measure_pwm(self.pin)
                 
             if pulse_times is None:
                 print("Timeout occurred while reading PWM signal.")
-                return -1
+                return None
             else:
                 high_time, low_time = pulse_times
                 total_time = high_time + low_time
@@ -53,3 +59,12 @@ class HumiditySensor:
             GPIO.cleanup()
 
         return duty_cycle
+
+
+
+    def get_instance():
+        if HumiditySensor.instance is None:
+            HumiditySensor.instance = HumiditySensor(Constants.HUMIDITY_SENSOR_PORT)
+        
+        return HumiditySensor.instance
+    

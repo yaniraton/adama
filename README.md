@@ -51,6 +51,13 @@ classDiagram
         -servo: Servo
         +set_servo_angle(): void
     }
+    class Plant{
+        -id: int
+        -type: string
+        -humidity: dict
+        -capture: string
+        -column: int
+    }
 ```
 
 

@@ -1,5 +1,5 @@
 from gpiozero import OutputDevice, PWMOutputDevice
-from server.MotorPorts import MotorPorts
+from server.Utilities.MotorPorts import MotorPorts
 
 
 class Motor:
@@ -21,9 +21,17 @@ class Motor:
             self.in1.on()
             self.in2.off()
         elif speed < 0:
-           self.in1.on()
-           self.in2.off()
+           self.in1.off()
+           self.in2.on()
            
         self.en.value = speed
+
+    def lock(self) -> None:
+        """
+        This function locks the motor.
+        """        
+        self.in1.off()
+        self.in2.off()
+    
 
 
