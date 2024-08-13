@@ -290,3 +290,6 @@ pyrightconfig.json
 
 myenv/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,pycharm+all,python,pydev
+
+# DB credentials
+credentials.json  

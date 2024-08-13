@@ -15,7 +15,6 @@ class Server:
     controller: Controller
     arm: Arm
     elevator: Elevator
-    ultraSonicSensors: List[UltrasonicSensor] = []
     humiditySensor: HumiditySensor
     accelSensor: AccelSensor
 
@@ -24,8 +23,6 @@ class Server:
         self.arm = Arm()
         elevator = Elevator()
         self.controller = Controller(self.servoMotor.set_servo_angle)
-        for trig, echo in Constants.SONIC:
-            self.ultraSonicSensors.append(UltrasonicSensor(trig, echo))
         self.humiditySensor = HumiditySensor.get_instance()
         self.accelSensor = AccelSensor.get_instance()
         self.configure_buttons()
