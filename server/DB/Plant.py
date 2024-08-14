@@ -1,3 +1,6 @@
+import datetime
+
+
 class Plant:
 
     def __init__(self, plant_id: int, is_tomato: bool, humidities: dict, capture_url: str, column: int) -> None:
@@ -14,7 +17,7 @@ class Plant:
         self.capture_url = ""
         self.column = -1
 
-    def __init__(self, data_dict: dict):
+    def __init__(self, data_dict: dict) -> None:
         self.plant_id = data_dict["id"]
         self.is_tomato = data_dict["is_tomato"]
         self.capture_url = data_dict["capture_url"]
@@ -52,6 +55,12 @@ class Plant:
 
     def set_column(self, column: int):
         self.column = column
+
+    def add_humidity(self, humidity: float):
+        if self.humidities is None:
+            self.humidities = {}
+
+        self.humidities[str(datetime.datetime.now())] = humidity
 
     def to_dict(self):
         return {

@@ -5,6 +5,7 @@ from server.DB.Plant import Plant
 
 
 class DataBase:
+    instance = None
 
     def __init__(self):
         cred = credentials.Certificate("credentials.json")
@@ -46,3 +47,23 @@ class DataBase:
             return None
         else:
             return Plant(dict(plant_dict))
+        
+    def get_plant_data(self, plant_id):
+        snapshot = self.ref.get()
+
+        if snapshot is not None:
+            for column in list(snapshot):
+                for plant in column:
+                    if plant is not None:
+                        current_dict = dict(plant)
+
+                        if current_dict["plant_id"] == plant_id:
+                            return Plant(current_dict)
+
+        return None
+
+    def get_instance():
+        if DataBase.instance is None:
+            DataBase.instance = DataBase()
+
+        return DataBase.instance
