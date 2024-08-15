@@ -1,3 +1,4 @@
+from server.DB.DataBase import DataBase
 from server.Subsystems.Arm import Arm
 from server.Subsystems.DriveTrain import DriveTrain
 import Controller
@@ -6,8 +7,7 @@ import threading
 from server.Subsystems.Elevator import Elevator
 from server.Utilities.HumiditySensor import HumiditySensor
 from server.Utilities.AccelSensor import AccelSensor
-from typing import List
-from server.Utilities.UltrasonicSensor import UltrasonicSensor
+from DB.Plant import Plant
 
 class Server:
 
@@ -15,19 +15,18 @@ class Server:
     controller: Controller
     arm: Arm
     elevator: Elevator
-    ultraSonicSensors: List[UltrasonicSensor] = []
     humiditySensor: HumiditySensor
     accelSensor: AccelSensor
+    data_base: DataBase
 
     def __init__(self) -> None:
         self.driveTrain = DriveTrain()
         self.arm = Arm()
         elevator = Elevator()
         self.controller = Controller(self.servoMotor.set_servo_angle)
-        for trig, echo in Constants.SONIC:
-            self.ultraSonicSensors.append(UltrasonicSensor(trig, echo))
         self.humiditySensor = HumiditySensor.get_instance()
         self.accelSensor = AccelSensor.get_instance()
+        self.data_base = DataBase.get_instance()
         self.configure_buttons()
 
         # TODO: add the comunicator object when it is ready
@@ -73,4 +72,19 @@ class Server:
 
                 soil_moisture = self.arm.measure_soil_moisture_operation()
 
-                # Write to DB
+                qr_data = qr_data.split("-")
+                self.save_plant_to_db(int(qr_data[0]), int(qr_data[1]), bool(qr_data[2]), soil_moisture)
+
+    def save_plant_to_db(self, column, plant_id, is_tomato, humidity):
+        current_plant_data = self.data_base.get_plant_data(plant_id)
+
+        if current_plant_data is not None:
+            current_plant_data.set_column(column)
+            current_plant_data.set_is_tomato(is_tomato)
+            current_plant_data.add_humidity(humidity)
+        else:
+            current_plant_data = Plant(plant_id, is_tomato, {}, "", column)
+            current_plant_data.add_humidity(humidity)
+
+        self.data_base.save_plant(current_plant_data)
+
