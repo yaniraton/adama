@@ -53,7 +53,7 @@ classDiagram
     }
     class Plant{
         -id: int
-        -type: string
+        -isTomato: boolean
         -humidity: dict
         -capture: string
         -column: int

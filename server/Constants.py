@@ -41,3 +41,6 @@ CAMERA_RESOLUTION = (640, 360)
 # IMU
 IMU_BUS = 0
 IMU_ADDRESS = 0
+
+#DB
+FB_URL = "https://greenbot-2d29c-default-rtdb.firebaseio.com/"
